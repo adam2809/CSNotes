@@ -1,0 +1,32 @@
+>>Half-adder
+-A   B|S   C(S is sum;C is carry)
+ -----------
+ 0   0|0   0
+ 0   1|1   0
+ 1   0|1   0
+ 1   1|1   1
+-Notice that S is an OR gate and C is an AND gate
+-Diagrams on slides
+>>Full adder
+-same as half adder but takes A, B and C(carry from previous adder)
+-connecting full adders creates ripple carry adder
+-Carry bit on the last gate is important:
+  #The result might be larger than we can store(8-bit addition can yield 9-bit output)
+  #The carry can be used to connect the ripple carry adder back to itself and e.g. do 32-bit addition on one 8-bit adder
+-Outdated as it takes way too much time for a change in inputs to propagate through the adders
+-More modern versions try to propagate the carry faster by considering the full adder truth table
+>>Negative number binary representation
+-Sign and magnitude;set most significant bit to 0 if positive number 1 if negative the rest represent magnitude of the number;
+not great as it represents 0 twice(1000 and 0000 for 4-bit numbers)
+-Excess-n;subtract every number by n so for a 4 bit number it can represent <0,15> and in excess 3 it can represent <-3;12>;
+inconveniant for addition because after addition you would have to subtract 2n from the result
+-One's compliment;at the end of addition of negative plus positive you have to add 1 to the result
+-Two's compliment;represent -x in n bits as 2^n - x;to create Two's compliment negative number take positive version of it
+invert the bits and add 1;this negative number representation doesn't require any additional actions after adding positive
+to negative;the issue of overflow is present if you add same sign number
+>>Subtraction
+-is done by adding negative number
+
+>>Combinatorial logic - output depends only on input
+
+>>Sequential logic - output depends on input and previous inputs

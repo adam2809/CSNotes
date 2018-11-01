@@ -1,0 +1,3 @@
+full duplex                       vs     half duplex
+both cat talk at the same time           only one can talk
+continous oscillation(eg ethernet) works better than 'steps'(eg serial/es232) of voltage especially over large distances 

@@ -1,0 +1,145 @@
+>>C program always starts with main() just as java
+
+>>ANSI C comments look like this:
+
+code;
+/*comments
+still comments
+comments comments comments
+end of comments*/
+code;
+
+>>Function definitions:
+
+returntype functionname(parameters){
+  code;
+}
+
+>>Function declaration:
+
+Since it is necessary to tell the compiler a function exists before calling it which is not always
+possible function DECLARATIONS (not definitions) are used. They look like this:
+returntype functionname(parameters);
+
+>>Calling functions:
+
+functionname(agrgument1, agrgument2, ...)
+
+>>Standard libraries/importing:
+-#include <lib.h> or #include "lib.h"
+-Library names end with '.h' like this '<clib.h>'(look in system libraries) or '"clib.h"'(look in current directory
+than system libraries)
+
+>>Variables are representations of memory locations
+
+>>C data types:
+-char(8-bit)
+-int(32-bit)
+-float(32-bit)
+-double(64-bit)
+-bit sizes dependent on compiler(can be checked with sizeof())
+
+>>C qualifiers:
+-used in conjunction with types
+-signed or unsigned
+-short or long
+
+>>Variable declaration:
+-[qualifier] type name;
+
+>>Watch out for reserved words (https://beginnersbook.com/wp-content/uploads/2014/01/C-keywords.png)
+
+>>Value of a declared variable that was not assigned is indeterminate
+
+>>Constants also have types:
+-3 is an int
+-3.0 is a double
+-3L is long int
+-3UL is unsigned long int
+
+>>Storage classes:
+-automatic;local to block of code;is destroyed at the end of the block
+-static;kinda like global variable in python or java;declared inside block with keyword static
+or outside block(no need to put static in in that case)
+-block of code only sees local variable if there is a global one with the same name
+
+>>It is good practice to return 0; in main at the end because this means the program exited without errors
+if main returns anything else it means it exited with an errors
+
+>>"\b" in printf is a backspace
+
+>>Execution of two statements at the end of for is possible
+
+
+>>Strings
+-are coded like this: char[] = "string\0"
+                       /\              ^---NUL character always needed as C stops string only when it sees NUL char
+                       ||
+no builtin string it is an array of chars
+
+-name of an array is also a pointer to the first adress of the array
+but they are constant so it is not possible to reassign them
+-char texta[] = "hello world" => constant
+-char *textp = "hello world"  => can be changed
+-Counting string length using pointer arithmetic:
+             |-------------------|
+             |int i = 0;         |
+             |char *a="some str";|
+             |while(a != '\0'){  |
+             |  a++;             |
+             |  i++;             |
+             |}                  |
+             |-------------------|
+
+>>scanf
+-scanf("%s %d",name, &age)
+          /\    ^------^--------it takes pointers not variables unlike printf
+          ||
+looks for string than space than int
+-kind of works like regex
+-also returns the number of chars sucessfully loaded
+
+Arrays:
+-No bounds checking in arrays so for int a[10];printf(a[12]); compiles and runs but the behavior is unexpected it
+will display whatever was in the memory adress it pointed to;This is called buffer overflow
+-int *pa = &a[0]; is equievelant to int *pa = a; as a is a pointer to the first element of the array
+-passing into functions double fun(double arr[]); is the same as double fun(double *arr);
+-no length function so length checking has to be done manually
+-copying:
+  int[] a={1,2},b[2];
+  b = a; - this only performs a shallow copy(sets b to point to the start of a)
+  a[1]=0; - this changes both a[1] and b[1] as a and b both point to the same adress
+  #deep copy has to be performed by explicitly setting b[i] = a[i] for every i less than the size of the arrays
+-2D arrays:
+  #when passing into a function you need to supply length of the last braces so void fun(int arr[][3]); and fun(int arr[2][3]); are OK
+  but fun(int arr[][]); doesn't compile
+
+
+>>Pointer arithmetic
+int a[]={1,2,3};
+int *p = a; - p now points to the first element of a
+p = p + 1; - now p points to the second element of a as adding one to a array pointer tells it to point
+to the next object not to the next byte
+
+>>Dynamic memory allocation:
+-array size is set at compile time so you cant do scanf("%d",&x);int a[x]; C doesn't allow for variable
+array size declarations
+-Program Memory layout lecture 14 slide TODO figure this out
+-declaring variables inside functions is declaring on the stack
+-declaring using malloc is declaring on the heap
+-void *malloc(size)
+  #lives in stdlib.h
+  #returns a void pointer(it doesn't say anything about how many bytes one objects occupies so integer arithmetic is not possible
+  (it has to be casted to enable it)) to the beginning adress of the allocated memory
+  #to allocate space for n elements of type t call malloc(n * sizeof(t)) or use calloc(numberOfObjects,sizeOfEach)(it also zeroes the bytes allocated)
+  #it is good to check if malloc returned NULL it does it when the heap is full
+-void free(void *ptr) - pass pointer that malloc returned to free the memory
+-TODO there is also realloc
+
+>>Casting:
+-for varibales
+double pi = 3.14;
+int piint = (int) pi;
+-for pointers
+int *p = (int *) malloc(4*sizeof(int)); - allocates memory for 4 ints with start at p
+-works pretty much just like java

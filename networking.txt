@@ -1,0 +1,161 @@
+>>OSI model:
+level
+7       APPLICATION     HTTP, POP3, IMAP
+6       PRESENTATION    HTML,CSS
+5       SESSION
+4       TRANSPORT       TCP;UDP
+3       NETWORKS        network connecting networks; this is where internet starts;eg IPv4 IPv6
+2       DATA LINK       checking data corruption; packing data into frames/packets; only inside local network
+1       PYSICAL         wires
+
+>>Layers 1 and 2 handle only the physical aspects
+
+>>Adressing:
+-Ethernet uses 48-bit MAC adresses. They are given to network cards when they are manufactured
+-It wouldn't work for IP beacause the computers are on different networks
+
+>>IP Classes:                     highest order bits start with:
+-A;big organisations              0
+-B;unis                           10
+-C;small                          110
+-D;multicast                      1110
+-E;experimenal                    1111
+
+>>Cassless inter-domain routing:
+-better alternative for classes
+-xxx.xxx.xxx.xxx/y
+|-------------| |-|
+      \/        \|/
+    ip adress   how many bits
+                represent the
+                network (ie how
+                many 1s are in mask)
+
+>>IP adresses:
+-mask is allocated by standards authority
+-static(set by user) or dynamic(dhcp)
+
+>>Adress resolution
+-TODO figure this out
+
+>>DNS
+-hierarchical;root is the last word after dot (.com, .pl) follows the tree like structure right to left
+-TODO look up details
+
+>>Ethernet:
+-It is based on Hawaian network Aloha:
+  #The key idea if it is: Data has to get from A to B eventually(not necessarily on the first send)
+  #It assumes that clients send data in bursts(spikes in data transfer with long moments of silence)
+  #It tells clients to send data whenever they need to
+  #If a server receives a packet successfully it sends an acknowledgement packet back. The clients
+  wait for the acknowledgement package if they don't get it they send once again
+  #The wait times between unsuccessful sends are different between machines as if it was the same
+  collisions would happen over and over again
+  #This system not only takes care of packet collisions but also any distortions
+-Ethernet doesn't use acknowladgement packages CSMA/CD is used instead
+-It is a bus network
+-The cable has no electrical signals when no computers are transmitting
+-CSMA/CD:
+  #If there is nothing transmitted you send data else wait (carrier sense) takes care of the collisions where
+  two computers start sending at the same time
+  #Problem arises when two machines are waiting for an empty network
+  #Since Ethernet is a bus network you can send and recieve the data you are sending so to check if there is a
+  packet collision you save what is being sent and compare it to what is being recieved
+  #Every network card has a maximum delay before resending (for now called d)
+  #If a collision occurrs a machine chooses a random value between 0 and d and resend the packet after that
+  random amount of time. If there is another collision double d and repeat until there is no collision
+-It is not a relieable network because we only know that the data was sent without corruption but there is
+no guarantee that it was recieved correctly(e.g. the reciever can be offline) so software has to be written
+on top of Ethernet to ensure reliability
+-Ethernet switches:
+  #Remomve almost all possibility of collisions
+  #Connected computers send packets to the switch which stores it for a short while and forwards it to the sender
+
+>>WIFI
+-Based on Ethernet
+-Has to cope with 'hidden node problem';there can be machine A and B both in range of WIFI basestation but it
+doesn't imply that A is in range of B;that means you can't use CSMA/CD because for it to work
+-CSMA/CA;Similar to CSMA/CD but instead of checking if anything is transmitting(which because of hidden node problem is impossible)
+it first sends a message to reserve the bus(called 'Request to send') and if it gets a confirmation('Clear to send') it sends
+
+>>Packets
+-Data is synched with network card clock
+|---||-||--||--||-||------------------------------||--|
+  1   2   3   4  5                 6                 7
+-1;Preamble 7 bytes of alternating 0 and 1;Gives computer time to sync signal wit the clock and informs about incoming packet
+-2;SFD;1 byte (0xD5);signifies start of actual packet
+-3 and 4;destination and source adress(MAC adresses);destination first beacause ethernet was originally a bus network so data went to
+every machine so it had to be checked if the reciever is desired recipient
+-5;2 bytes of type info;it is standardized across all network cards
+-6;data;from 46 to 1500 bytes;notice that it is not specified how long is data;machine works it out based on the fact that CRC is 4 bytes long
+and there is a moment of silence before the next packet
+-7;Cyclic Redundancy Check;error detection;reciever calculates its own CRC and compares it with the CRC recieved;only detects data distortions and not
+man in the middle as if somebody changed the data they can also change CRC
+
+>>Latency vs data throughput
+-samallest possible packet is 672 bits (368 is data) (only ~55% is data )    ------------\
+-largest possible packet is 120 bits (368 is data)  (~98% is data)           ------------/  It is significantly more efficient to send large packets BUT
+                                                                                                                                                       |
+-latency has to be considered and longer packets take longer to transmit so they have more latency <---------------------------------------------------|
+-Ethernet can send a 64-bit packet in ~0.05ms
+-Ethernet can send a 1538-bit packet in ~1ms
+
+>>Routing/packet forwarding:
+-Having two NICs(Network Interface Card aka Network card) is useful for connecting one network to the another
+-Slide lecture 24.10.18 illustrates this
+-It is called routing or packet forwarding
+-The first 'routers' were IMPs
+-Routers take packets from network 1 and if it is destined to network 2 they translate the packet to network 2 standards
+and make sure it gets to destination
+
+>>Bridging
+-connecting networks using layer 2
+-TODO figure bridges out
+
+>>Store and forward
+-Router recieves packet and prepares it and sends it out once again so it behaves just like another machine that is connected to both networks
+
+>>IP Packets
+-can have at most ~60000 bytes of data
+-only around 1500 is used as it may be hard to put the packets back to an ethernet network if they were bigger
+-time to live;those packets travel through many various networks thus it is
+possible to fall into a loop;every machine decrements the time to live(usually starts at 64);if ttl hits zero packet is discarded
+
+>>TODO review slides 24.10.18 especially about IP
+
+>>IP just as ethernet is not reliable as there is no confirmation of packet reception so other protocols(TCP) have to be built
+on top;relieable networks are not always desireable as it increases latency
+>>TCP
+-Conncetion-oriented protocol;It opens a connection between two comuters and delivers packets in defined sequence
+-allows for multiple connections between two computers;the connection is defined by source and destination adress and port
+so if it sees the same adresses and source port but different ports between two connections it knows those are seperate connections
+-To ensure that packets reach destination in the same order they were sent it gives every packet a sequence number
+-It combats packet loss it uses a similar system to alocha;if the recipient recieves the packet it sends an acknowladgement if the sender
+doesn't get one it sends the packet once again
+-To maximise network throughput it optimises the time that it waits for acknowladgement and reduced when the packet is sent successfully
+consistantly and increases it if the packet sends are often not recieved
+-Windowing TODO figure this out
+-Three way handshake TODO check it out
+
+>>Routing table - How does a computer know how to calculate path through the internet:
+-no computer has to know the whole path but only where does it send it next
+-routing table is used to look up this next hop
+-this method is source independent so we only care where it goes not where it comes from
+-it is also not necessary to store next hop for every single machine but only for the network that machine
+is on so the table looks kinda like this:
+destination         next hop
+205.*               34.123.190.0
+34.45.*             1.2.1.1
+* - any numbers
+-Has to be universal;has to have a next hop for every possible query
+-Has to be optimal;graph theory is useful for ensuring this
+-many routers have default routes it is symbolised in the routing table as and IP adress 0.0.0.0 and mask 0.0.0.0
+-for small networks routng table can be programmed manually and be static but for bigger ones require dynamic updates
+-calculating the routing table dynamically:
+  #links are given weights(usually low is fast high is slow)
+  #than algorithms such as dijkstra are used to calculate the fastest route
+-Distributed routing alghoritms:
+  #Link state routing;routers send updates on what networks go up and which ones go down
+  #TODO vector distance rourtg look up details
+
+>>It is possible to cut off large groups of users from the internet by deleting adresses from the routing table

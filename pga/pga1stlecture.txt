@@ -1,0 +1,5 @@
+How to compile C for pga:
+1. gcc -Wall -o -ansi -pedantic-errors myprog source.c (o flag allow to pick name of compiled program) (-Wall flag show compiler errors)
+(ansi flag tells compiler to use ANSI/C89) (-pedantic errors turns off gcc extensios)
+#TODO read up on -pedantic(-errors)
+learn the ANSI C/C89 for the course (K&R 2nd edition)

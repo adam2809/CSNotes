@@ -1,0 +1,3 @@
+>>upper case omega in logic is the set of Booleans (True, False)
+
+>>the conventions is to use <=> when talking about inarguable truths and <-> when proposing a truth

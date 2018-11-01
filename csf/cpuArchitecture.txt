@@ -1,0 +1,38 @@
+>>ALU:
+-Usually multi-bit one out and two in
+-Performs mathematical, bitwise operations -> its behavior is dynamic
+-Its functionality is controlled by additional pins
+-The amount of circutry can be optimised by for example not implementing subtraction operation
+and replacing it by adding positive and nagative numbers or ignoring the OR operation
+which can be performed with NOT and AND(De Morgan laws). This is beneficial as less
+gates mean lower cost and faster speed of travel of signals through the CPU
+-The Multiplexor is used to control the functionality of the ALU (a, b, sel -> if sel than a else b -> out)
+so essentially we have to perform every operation the ALU is capable of and than select
+(sel in Mux stands for select) the approperiate values(using control pins as sel)
+-Subtraction works by (assuming ALU: x,y -> out) inverting x, adding x to y and inverting
+the out. To convert positive to negative in U2 you invert bits and add 1 so subtraction works like this:
+TODO figure out subrtraction in ALU
+
+>>von Neumann model:
+
+MEMORY             CPU
+|----|            |----|
+|    | data bus   |    |
+|    |<---------->|    |<--------- IN
+|    | adress bus |    |
+|    |----------->|    |---------> OUT
+|    |            |    |
+|----|            |----|
+                    ^
+                inside:
+                #ALU
+                #Registers
+                #Control Logic
+-this model allows to change behavior of the computer by altering instructions and data in memory
+even though everything is still built with simple combinatotial logic
+-von Neumann bottleneck - CPU can only fetch program instructions or data
+>>6502
+-8-bi
+-3 8-bit registers plus Stack Pointer and Processor Status:
+  #A - the Accumulator;performs arithmetic and logic operations
+  #X and Y;temporary storage
