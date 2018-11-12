@@ -134,12 +134,94 @@ array size declarations
   #to allocate space for n elements of type t call malloc(n * sizeof(t)) or use calloc(numberOfObjects,sizeOfEach)(it also zeroes the bytes allocated)
   #it is good to check if malloc returned NULL it does it when the heap is full
 -void free(void *ptr) - pass pointer that malloc returned to free the memory
--TODO there is also realloc
+-void* realloc(initialPointer,newSize);takes initialPointer and reallocates all data which it points to to a new adress with size newSize
 
 >>Casting:
 -for varibales
 double pi = 3.14;
 int piint = (int) pi;
 -for pointers
-int *p = (int *) malloc(4*sizeof(int)); - allocates memory for 4 ints with start at p
+int *p = (int*) malloc(4*sizeof(int)); - allocates memory for 4 ints with start at p
 -works pretty much just like java
+
+>>Libraries:
+-divided into .h(header) files(declarations) and .c(logic)
+-to only compile code if _DEF is defined:
+#ifndef _DEF
+
+sth;
+sth;
+sth;
+sth;
+sth;
+
+ #endif
+
+>>Make/Makefile:
+-the format for a makefile is:
+target:prerequisite
+  recipie
+-TODO learn how to use make/makefiles linking and object code
+
+>>Custom data types:
+-typedef is the keyword
+-aliases:
+  #typedef double Decimal; - this works exactly as aliases in .bashrc so after wriring it
+  it is possible to say Decimal a; and it will be the same as double a;
+  #they have a scope just as vaiables
+-struct:
+  #Syntax for creating them:
+  struct name{
+    type varname; -|
+    type varname;  |\
+    type varname;  |/   members
+    type varname; -|
+  };
+  #Syntax for declaring:
+  struct structname name;
+  #Syntax for initializing
+  structname name = {val,val,val,...,val};
+  #To avoid writing struct at the beginning of declarations and initializations type aliases come in handy:
+  typedef struct name{
+    type varname;
+    type varname;
+    type varname;
+    ...
+  } name;
+  name structvarname; - now writing struct at the beginning is not necessary
+  #to get a variable from a struct structvarname.desiredvariable
+  #struct arrays are declared the same way normal arrays are
+  #common programming pattern:
+  structname *varname;
+  *(varname).sth;
+  varname->sth;
+  /*two lines above do the same thing*/
+  #usually only a pointer to a struct is passed to a function as passing the whole thing would be inefficient with
+  bigger structs
+  #a struct with a char and an int is not actually 5 bytes long as int can only start at adresses divisible by 4 so
+  such a struct would look like this:
+  char takes up the first byte(byte 0)
+  than from byte 1 to byte 3 C puts padding
+  int starts at byte 4 and ends at byte 7
+
+  >>Void pointers:
+  -point to a memory location without a known type
+  -pointer arithmetic is an error with void pointers to do it a cast is necessary
+  -for the linked list library store a void pointer in a struct and the user of the library will have
+  to perform the casts
+
+  >>Pointers to functions:
+  -Example:
+  int fun(int x){
+    int a,b,c;
+    if(x&&a){
+      return 0;
+    }
+    return 1;
+  }
+  int main(){
+    a=fun; - here a is assigned a pointer to the fun function
+  }
+  -template for pointer to function types returntype (*)(arg1type,arg2type,...)
+  -to write a function that takes a pointer to a function as an argument declare:
+  returntype funname(returntype (*nametouseinsidefunction)(arg1type,arg2type,...));

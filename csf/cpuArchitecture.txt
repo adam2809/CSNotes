@@ -36,3 +36,17 @@ even though everything is still built with simple combinatotial logic
 -3 8-bit registers plus Stack Pointer and Processor Status:
   #A - the Accumulator;performs arithmetic and logic operations
   #X and Y;temporary storage
+
+>>SR latch, D latch/filip-flops(TODO revise D latch/flipflop) slides 02.11.18
+
+>>
+-used to model sequential logic circuts
+-Slides 09.11.18 for how it looks(example with the 30p vending machine)
+-to implement flip-flops are used to hold the index of the state as a binary number so with n filp-flops
+2^n states can be represented(again illustration in slides)
+
+>>Mealy(output depends on the state and input takes less time than Moore) vs
+Moore(outputs only depend on the state(if state == 2: out 1) they are
+synched with the clock and require more logic;most mahcines nowadays use this method) machine
+
+>>Logic for resetting is often needed
