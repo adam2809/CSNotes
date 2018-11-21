@@ -1,0 +1,29 @@
+>>Berkley sockets:
+-API for TCP/IP
+-treat everything as a file
+-network agnostic - implemented them such that it doesn't matter what network you are programming
+>>Sockets in C:
+-instead of open create a socket: socket(protocolDomain(PF_INET),connectionType(SOCK_STREAM),protocolType(IPPROTO_TCP)); returns a
+file descriptor just like the open function(what to type for a TCP connection in parentheses)
+-to connect: connect(socketFileDescriptor,(* struct sockaddr_in) structWithIPAdressAndPort,)
+-sockaddr_in contains:
+  #sin_family(unsigned char) - Adress family
+  #sin_port (unsigned short) - port
+  #sin_addr (struct in_addr) - IP adress
+-in_addr contains:
+  #s_addr (unsigned int)
+-to set an IP address use gthostbyname() returns a struct hostnet(h_addr,h_length inside)
+it is useful to than use memcpy to copy the contents of this structure into sock_addr.in_addr
+-reading:
+  #read(socketFileDescriptor,pointerToBuffer,bufferSize)
+  #returns the number of bytes recieved
+  #dont forget to put a NUL character at the end of the buffer after calling read
+
+>>Big endian vs little endian:
+-Big: most significant bit at adress 0 least significant byte at the last one
+-Little: most significant bit at last adress  least significant byte 0
+-Internet is standardized to big endian so it has to be used when programming sockets but x86 uses little so conversions are
+required
+-for helper functions that convert from one to the other look slides 12.11.18
+
+>>Conventionally in protocols a line is terminated with a carrige return followed by a line feed("\n\r")

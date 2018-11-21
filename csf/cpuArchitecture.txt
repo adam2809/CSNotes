@@ -31,11 +31,20 @@ MEMORY             CPU
 -this model allows to change behavior of the computer by altering instructions and data in memory
 even though everything is still built with simple combinatotial logic
 -von Neumann bottleneck - CPU can only fetch program instructions or data
+
 >>6502
 -8-bi
 -3 8-bit registers plus Stack Pointer and Processor Status:
   #A - the Accumulator;performs arithmetic and logic operations
   #X and Y;temporary storage
+-most instructions use the Accumulator as a primary destination for operation result storing (A = A op something)
+the X and Y registers can only be incremented etc. so they are mostly used as counters or sth like that
+-uses only one adress per instruction(to add do ADC #3 this is not a problem as you can only add a value to the
+one that is alredy stored in the accumulator) (680000 uses two addresses, ARM uses 3)
+-nearly all elementary instaructions can be implamenterd with the same sequence:
+  #store ALU A register with the Accumulator
+  #store ALU B register with the value specified
+  #set ALU function and store the output in the accumulator
 
 >>SR latch, D latch/filip-flops(TODO revise D latch/flipflop) slides 02.11.18
 
@@ -47,6 +56,37 @@ even though everything is still built with simple combinatotial logic
 
 >>Mealy(output depends on the state and input takes less time than Moore) vs
 Moore(outputs only depend on the state(if state == 2: out 1) they are
-synched with the clock and require more logic;most mahcines nowadays use this method) machine
+synced with the clock and require more logic;most machines nowadays use this method) machine
 
 >>Logic for resetting is often needed
+
+>>CPU processing speed is significantly faster than memory systems so most of processor time is
+spent waiting for data to be fetched from memory, with modern computers a problem is even that the time it takes
+for data to get through the motherboard from memory is significant(e.g with a 3 GHz processor). Solutions:
+-Faster memory, not very good as static RAM is ~1000 times more expensive than flash RAM
+-CPU accesses memory for only two reasons - fetch data or instructions. So you can store instructions in static RAM(cache)
+and only access flash memory for data. This speeds things up as an average program accesses memory for data relatively
+not often and doesn't make the computer as expensive as using only static RAM but still it would need a lot of static RAM
+-Locality, caching and memory hierarchy
+
+>>Locality:
+-Spatial - if a bit of memory gets executed the nearby ones are likely to get executed next
+-Temporal - if a bit of memory is accessed it is likely to get accessed again soon
+
+>>Caching:
+-If a piece of data that CPU wants to access happens to be in cache it is a cache hit if not its a cache miss
+-Hit rate: hits/accesses Miss rate: 1 - hitrate
+-Hit time: time to access the cache + time it takes to tell if it is a hit or a miss
+-Miss penalty - how much time is added if a cache miss happens
+
+>>Stored program computer - to change functionality modify whatever is stored in memory
+
+>>Pipeline
+-used to do the three stages(fetch,decode,execute) in parallel
+-after the first instruction is fetched in the next clock cycle start decoding it and fetch the second instructions
+slides 21.11.18 for illustration
+-even though each instruction still takes 3 clock cycles to execute it appears as if there is one instruction execute each cycle
+-implemented by adding flipflops(illustration on slides, the blue lines are DFFs)
+-pipeline hazards:
+  #structural hazard - CPU can only fetch data or instructions at the same time there are(eg LDR instruction in execute stage and another instruction in fetch stage)
+  the solution is that the CPU will just execute those instructions in sequence(bubbles, pipeline stalls) (illustration on slides)

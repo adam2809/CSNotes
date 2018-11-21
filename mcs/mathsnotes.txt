@@ -1,0 +1,17 @@
+>>upper case omega in logic is the set of Booleans (True, False)
+
+>>the conventions is to use <=> when talking about inarguable truths and <-> when proposing a truth
+
+>>Cartesian product:
+-set of all possible combinations of elements from n sequences so for W={a,b,c} S={d,e,f}
+the cartesian product is
+  a     b     c
+d(a,d) (b,d) (c,d)
+e(a,e) (b,e) (c,e)
+f(a,f) (b,f) (c,f)
+WxS={(a,d),(b,d),(c,d),(a,e),(b,e),(c,e),(a,f),(b,f),(c,f)}
+-cardinality: |S0xS1xS2x...|=|S0|*|S1|*|S2|*...
+
+>>Powerset:
+-set of all subsets of a sets
+-cardinality of a powerset is 2 to the power of the original set 

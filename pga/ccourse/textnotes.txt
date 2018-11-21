@@ -164,7 +164,7 @@ target:prerequisite
 -TODO learn how to use make/makefiles linking and object code
 
 >>Custom data types:
--typedef is the keyword
+-typedef is the keywor
 -aliases:
   #typedef double Decimal; - this works exactly as aliases in .bashrc so after wriring it
   it is possible to say Decimal a; and it will be the same as double a;
@@ -186,7 +186,28 @@ target:prerequisite
     type varname;
     type varname;
     type varname;
-    ...
+    ...ctions:
+-Example:
+int fun(int x){
+  int a,b,c;
+  if(x&&a){
+    return 0;
+  }
+  return 1;
+}
+int main(){
+  a=fun; - here a is assigned a pointer to the fun function
+}
+-template for pointer to function types: returntype (*)(arg1type,arg2type,...)
+-to write a function that takes a pointer to a function as an argument declare:
+returntype funname(returntype (*nametouseinsidefunction)(arg1type,arg2type,...));
+
+>>C file I/O:
+-everything is a file(e.g keyboard, monitor, usb ports, sockets). This way there is a unified way to do I/O.
+-to open: open(path,mode(read/write/append)); return a file descriptor
+-to read: read(fileDescriptor,pointerToAllocatedMemory, byteCount); puts raw bytes from the file in
+memory pointed to by pointerToAllocatedMemory
+-to close: close(fileDescriptor);
   } name;
   name structvarname; - now writing struct at the beginning is not necessary
   #to get a variable from a struct structvarname.desiredvariable
@@ -204,24 +225,59 @@ target:prerequisite
   than from byte 1 to byte 3 C puts padding
   int starts at byte 4 and ends at byte 7
 
-  >>Void pointers:
-  -point to a memory location without a known type
-  -pointer arithmetic is an error with void pointers to do it a cast is necessary
-  -for the linked list library store a void pointer in a struct and the user of the library will have
-  to perform the casts
+>>Void pointers:
+-point to a memory location without a known type
+-pointer arithmetic is an error with void pointers to do it a cast is necessary
+-for the linked list library store a void pointer in a struct and the user of the library will have
+to perform the casts
 
-  >>Pointers to functions:
-  -Example:
-  int fun(int x){
-    int a,b,c;
-    if(x&&a){
-      return 0;
-    }
-    return 1;
+>>Pointers to functions:
+-Example:
+int fun(int x){
+  int a,b,c;
+  if(x&&a){
+    return 0;
   }
-  int main(){
-    a=fun; - here a is assigned a pointer to the fun function
-  }
-  -template for pointer to function types returntype (*)(arg1type,arg2type,...)
-  -to write a function that takes a pointer to a function as an argument declare:
-  returntype funname(returntype (*nametouseinsidefunction)(arg1type,arg2type,...));
+  return 1;
+}
+int main(){
+  a=fun; - here a is assigned a pointer to the fun function
+}
+-template for pointer to function types: returntype (*)(arg1type,arg2type,...)
+-to write a function that takes a pointer to a function as an argument declare:
+returntype funname(returntype (*nametouseinsidefunction)(arg1type,arg2type,...));
+
+>>C file I/O:
+-everything is a file(e.g keyboard, monitor, usb ports, sockets). This way there is a unified way to do I/O.
+-to open: open(path,mode(read/write/append)); return a file descriptor
+-to read: read(fileDescriptor,pointerToAllocatedMemory, byteCount); puts raw bytes from the file in
+memory pointed to by pointerToAllocatedMemory
+-to close: close(fileDescriptor);
+OR:
+-to open: fopen(char* path,char* mode) returns pointer to a file or NULL if the filename is nonexistant
+-modes:
+ #r read
+ #r+ read and write
+ #w if exist erase it if it doesnt exist create new and write
+ #w+ if exist erase it if it doesnt exist create new and write/read
+ #a if exists write(append) to it if it doesnt exist create new and write(append)
+ #a+ if exists write(append)/read to it if it doesnt exist create new and write(append)/read
+-C uses buffers as writing to files is significantly more expensive than writing to buffer in memory so to actually
+write to a file call fclose(pointertofile) or fflush(pointertofile)
+-writing to files: fprintf(pointertofile,format,stufftoputin%sor%d,stufftoputin%sor%d,stufftoputin%sor%d,...)
+-stderr,stdout,stdin are pointers to files
+-to redirect program outputs in terminal ./prog > stdoutoutput or ./prog 2> stderroutput (> for stdout
+2> for stderr &> for both)
+-reading from files: fscanf(pointertofile,format,pointerstostorein) returns EOF(end of file) as the last char in a file
+or fchar(pointertofile) to read one character
+-TODO look up reading in detail
+-writing:
+  #fscanf is unsafe as it doesnt limit the amount of chars fetched
+  #fgets reads a string from a file and has a parameter to specify maxchars to read:
+  fgets(pointertogetinto,maxchars,pointertofile);
+-seeking:
+  #fscanf and fgets use sequential access so to read the n-th char you have to read all chars from 0 to n-1
+  this uses random access
+  #fseek(pointertofile,whichchar,relativetowhat)
+  #relativetowhat: SEEK_SET - relative to the begginning of the file SEEK_CURR - relative to the current position
+  SEEK_END - relatife to the end of the file

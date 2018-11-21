@@ -1,0 +1,26 @@
+>>Cathode ray tubes(CRT)
+-Everything in a vaccum
+-Cathode generates electrons
+-focus and accelerating anodes direct and speed up the electrons
+-you can deflect electrons to make them hit different parts of the phosphorous screen and by that
+creating a dot of light
+-if you generate electrons quickly enough you can create an illusion of a whole image but if you freeze
+time and look at a CRT you would only see a single dot of light
+-how to draw mushrooms oscilloscope
+-they can be vector(you just draw shapes with a dot) or raster(start usually at the top left corner and draw
+lines one by one)
+
+>>Resolution
+-Nyquist theorem TODO
+-aliasing can appear if display is viewed from up close or if the resolution is too small
+
+>>Video memory:
+-CPU desnt take care of diplaying pixels as it would not have time to do actual calculations
+instead a dedicated piece of hardware displays pixels an array of pixels stored in memory. To
+control the display CPU alters that pixel array. The issue is that you can't have display hardware
+and CPU accessing that memory at the same time. Solutions:
+  #Dedicated video memory - only acessed by the video hardware or accessed by CPU only when video hardware is
+  bound not to access it(eg. when screen is blank)
+  #Dual access RAM - memory that can be accessed by two things at the same time
+
+>>Drawing into memory TODO review slide
