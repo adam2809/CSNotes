@@ -19,14 +19,17 @@ significantly less complicated than compilers
 -R0 is a register used for printing
 -SWI/SVC24-bit number;executes os commands(eg printing);used to communicate with the os
 -CMP compares two values(internally takes value from one registers and subtracts the other one)
-BEQ(branch if equal) and BNE(branch if not equal)
+ BEQ(branch if equal) and BNE(branch if not equal)
 -ADR reg, label;take a value from a label(or adress) and put int in reg
 -STR reg, label;take a value from reg and put int in label(or adress)
 -MUL reg0, reg1, reg2; can ONLY multiply registers;reg1*reg2 stored in reg0
 -MLA reg0, reg1, reg2, reg3;can ONLY multiply registers;(reg1*reg2)+reg3 stored in reg0
+-TODO look up ASR and other shifts
 
 >>SWI
 -1;user input
 -2;stop the program
 -3;prints value in R0
 -4;prints value in adress pointed to by R0
+
+>>

@@ -281,3 +281,83 @@ or fchar(pointertofile) to read one character
   #fseek(pointertofile,whichchar,relativetowhat)
   #relativetowhat: SEEK_SET - relative to the begginning of the file SEEK_CURR - relative to the current position
   SEEK_END - relatife to the end of the file
+
+>>Call stack:
+-functions are put there when they are called and popped when they return
+-each entry is a stack frame(or activaion record) which contains passed parameters return value local variables etc.
+
+>>Tail recursion ; last instruction in a function is a call to itself ; makes it easier for the compiler to optimize the code
+as it doesn't have to bother with copying local variables so much
+
+>>Compilation
+-cross-compiling: compiling for an architecture different from the one compiled on(godbolt.org - interactive compiler)
+-stages:
+  #preprocessing(0)
+  #compialtion()(1)
+  #assembly(assembly to machine code)(2)
+  #linking(3)
+-0: (-E flag in gcc)
+  #parses all lines starting with # and removes them
+  #removes all comments
+  #remembrers where file comes from
+  #replaces macros with their contents, does the preprocessor directives thing
+  #doesnt check for errors
+-1: (-S flag in gcc):
+  #from C to assembly
+-2: (- flag in gcc):
+  #from assembly to object code
+-3 (-o flag in gcc):
+  #organises object code
+
+>>Preprocessor directives:
+-#DEFINE NAME TEXT - does a search and replace on all NAME and replaces with TEXT in the source file
+-can also be used with arguments: #DEFINE square(a) a * a; int x = square(2) <-- gets replaced with int x = 2 * 2 in the preprocessing stage
+USE BRACKETS AROUND VARIABLES AND EXPRESSIONS USING THIS METHOD NO TIME TO EXPLAIN JUST DO
+-using #ifdef for debugging - you can surround debugging printfs with it like this to print debug messages only for debugging:
+int a = 5;
+#ifdef DEBUG
+printf("%d debug msg\n",a);
+#endif
+return a;
+-the debug message will be printed only if compiled like this: gcc -DDEBUG flags progname
+-#ifdef also useful for handling different directory separators
+
+>>Variable length arguments
+-stdarg.h has 3 macros and a data type for handling this type of shit
+-to define: type fun(type arg0,type arg1, ...)
+-you have to declare va_list ap; in your function
+-va_start(ap,last normal argument) - do this when you want to start
+-va_arg(ap,type) - to access next argument
+-va_end(ap) - call this when you want to stop using the variable length args and free resources
+
+>>goto
+-DON'T USE THIS GARBAGE
+-DON'T USE THIS GARBAGE
+-DON'T USE THIS GARBAGE
+-goto LABEL; - goes to the line where LABEL: is
+
+>>Assertions
+-it is a macro in assert.h
+-if conditon in parentheses is false program exits and prints error message
+-use only for debugging they shouldnt affect code behaviour
+-to remove them use -NDEBUG flag
+
+>>enum
+-used to create groups of related constants
+-to use: enum NAME{ENUMERATOR,ENUMERATOR,ENUMERATOR, ...}
+-asocciates the n-th ENUMERATOR with n
+-it's just like saying:
+#define ENUMERATOR 0
+#define ENUMERATOR 2
+#define ENUMERATOR 1
+...
+-or to set custom values: enum NAME{ENUMERATOR=VAL,ENUMERATOR=VAL,ENUMERATOR=VAL, ...}
+-if you don't set one of ENUMERATOR values it will use the value of the previous one plus 1
+
+>>union
+-the same syntax as struct just put in union instead of struct
+-the difference is that a union only stores one type at a time
+
+>>const type varname; - declares that the value of this variable wont change
+
+>>register type varname; - tells the compiler to try to store the variable in a register

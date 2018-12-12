@@ -1,17 +1,17 @@
->>ALU:
+s>>ALU:
 -Usually multi-bit one out and two in
 -Performs mathematical, bitwise operations -> its behavior is dynamic
 -Its functionality is controlled by additional pins
 -The amount of circutry can be optimised by for example not implementing subtraction operation
-and replacing it by adding positive and nagative numbers or ignoring the OR operation
-which can be performed with NOT and AND(De Morgan laws). This is beneficial as less
-gates mean lower cost and faster speed of travel of signals through the CPU
+ and replacing it by adding positive and nagative numbers or ignoring the OR operation
+ which can be performed with NOT and AND(De Morgan laws). This is beneficial as less
+ gates mean lower cost and faster speed of travel of signals through the CPU
 -The Multiplexor is used to control the functionality of the ALU (a, b, sel -> if sel than a else b -> out)
 so essentially we have to perform every operation the ALU is capable of and than select
 (sel in Mux stands for select) the approperiate values(using control pins as sel)
 -Subtraction works by (assuming ALU: x,y -> out) inverting x, adding x to y and inverting
-the out. To convert positive to negative in U2 you invert bits and add 1 so subtraction works like this:
-TODO figure out subrtraction in ALU
+ the out. To convert positive to negative in U2 you invert bits and add 1 so subtraction works like this:
+ TODO figure out subrtraction in ALU
 
 >>von Neumann model:
 
@@ -29,7 +29,7 @@ MEMORY             CPU
                 #Registers
                 #Control Logic
 -this model allows to change behavior of the computer by altering instructions and data in memory
-even though everything is still built with simple combinatotial logic
+ even though everything is still built with simple combinatotial logic
 -von Neumann bottleneck - CPU can only fetch program instructions or data
 
 >>6502
@@ -38,9 +38,9 @@ even though everything is still built with simple combinatotial logic
   #A - the Accumulator;performs arithmetic and logic operations
   #X and Y;temporary storage
 -most instructions use the Accumulator as a primary destination for operation result storing (A = A op something)
-the X and Y registers can only be incremented etc. so they are mostly used as counters or sth like that
+ the X and Y registers can only be incremented etc. so they are mostly used as counters or sth like that
 -uses only one adress per instruction(to add do ADC #3 this is not a problem as you can only add a value to the
-one that is alredy stored in the accumulator) (680000 uses two addresses, ARM uses 3)
+ one that is alredy stored in the accumulator) (680000 uses two addresses, ARM uses 3)
 -nearly all elementary instaructions can be implamenterd with the same sequence:
   #store ALU A register with the Accumulator
   #store ALU B register with the value specified
@@ -52,11 +52,11 @@ one that is alredy stored in the accumulator) (680000 uses two addresses, ARM us
 -used to model sequential logic circuts
 -Slides 09.11.18 for how it looks(example with the 30p vending machine)
 -to implement flip-flops are used to hold the index of the state as a binary number so with n filp-flops
-2^n states can be represented(again illustration in slides)
+ 2^n states can be represented(again illustration in slides)
 
 >>Mealy(output depends on the state and input takes less time than Moore) vs
-Moore(outputs only depend on the state(if state == 2: out 1) they are
-synced with the clock and require more logic;most machines nowadays use this method) machine
+  Moore(outputs only depend on the state(if state == 2: out 1) they are
+  synced with the clock and require more logic;most machines nowadays use this method) machine
 
 >>Logic for resetting is often needed
 
@@ -65,8 +65,8 @@ spent waiting for data to be fetched from memory, with modern computers a proble
 for data to get through the motherboard from memory is significant(e.g with a 3 GHz processor). Solutions:
 -Faster memory, not very good as static RAM is ~1000 times more expensive than flash RAM
 -CPU accesses memory for only two reasons - fetch data or instructions. So you can store instructions in static RAM(cache)
-and only access flash memory for data. This speeds things up as an average program accesses memory for data relatively
-not often and doesn't make the computer as expensive as using only static RAM but still it would need a lot of static RAM
+ and only access flash memory for data. This speeds things up as an average program accesses memory for data relatively
+ not often and doesn't make the computer as expensive as using only static RAM but still it would need a lot of static RAM
 -Locality, caching and memory hierarchy
 
 >>Locality:
@@ -84,9 +84,75 @@ not often and doesn't make the computer as expensive as using only static RAM bu
 >>Pipeline
 -used to do the three stages(fetch,decode,execute) in parallel
 -after the first instruction is fetched in the next clock cycle start decoding it and fetch the second instructions
-slides 21.11.18 for illustration
+ slides 21.11.18 for illustration
 -even though each instruction still takes 3 clock cycles to execute it appears as if there is one instruction execute each cycle
 -implemented by adding flipflops(illustration on slides, the blue lines are DFFs)
 -pipeline hazards:
-  #structural hazard - CPU can only fetch data or instructions at the same time there are(eg LDR instruction in execute stage and another instruction in fetch stage)
+  #structural hazard - CPU can only fetch data or instructions at the
+  same time there are(eg LDR instruction in execute stage and another instruction in fetch stage)
   the solution is that the CPU will just execute those instructions in sequence(bubbles, pipeline stalls) (illustration on slides)
+  #control hazard - when there is a branch instruction so the instruction in the pipeline is not actually the one that is to be executes
+-control hazard solution ; if executing a branch instruction fetch the value the branch points to instead of the one after the branch
+ instruction ; this works as a branch at the end of the loop will go to the branch on every iteration except for one when it breaks ; for
+ conditional branches the CPU keeps track of how many times the branch was taken and how many it was not taken based on those values it works out if
+ the instruction after the branch instruction should be fetched to the pipeline or fetch the one pointed to by the branch instruction
+
+>>Parallelism
+-to perform calculations quicker you can put multiple ALUs or Load Store Units to eg perform two addition instructions at the same time
+-this allows for instruction execution time of less than one clock cycle
+-limitations:
+  #not possible if both instructions use the same regsiter
+  #not possible if one is a branch
+  #not possible if one depends on the output of the previous one
+
+>>Out of order execution ; in order to take the best advantage of parallelism the CPU reorders instructions to avoid parallelism limitations
+while making sure the programs functionality is excactly the sames
+
+>>Power wall:
+-the faster a CPU is the more power it consumes
+-the more power the more heat decepation needed
+-so at one point if you increase clock speed
+-this is caused by a thing with CMOS that it consumes most power whan changing state(and it will change state more often with higher clock speed)
+ to counter it you can represent 1 as lower voltage
+ (eg 1 vs instead of 2) but at one point you cant take it any lower now it is 0.8 volts as the noise from transistors will become and issue and
+ start corrupting data
+
+>>Parallel processing:
+-Can have single or multiple streams of data and intructions which you can mix(like in a table of slides 30.11.18 nice animation also on slides)
+-SIMD:
+  #data level paralelism - useful when dealing with multiple pieces of data per instruction
+  #eg with matrix multiplication you can process a whole row at one instead of
+-MISD
+  #kind of useless
+-MIMD
+  #when somebody says multiprocessing this is probably what they mean
+-multi-core system will share L2 or more often L3 cache between cores(cores are essentially entire processors on the same bit of sillicon)
+ while multi-processor system will have everything seperate
+-multi-threading:
+ #one core appears as two to the OS
+ #both virtual cores share L1 and L2 cache
+ #Utilizes multiple ALUs and other elements and switches between two streams of instructions to make sure all parts of the CPU are utilized
+  at all times
+ #gives around 10 to 20 percent speedup
+-Most systems use shared memory - all cores are connected to its own cache and the caches are connected to a shared system bus
+ this is also how cores communicate with each other - they write values to shared memory
+-TODO missed cache coherency
+-in C you can use fork() like this:
+//fork returns twice - once on one process one on the second
+if(fork()==0){
+  do fork 0 things
+}else{
+  do fork 1 things
+}
+//The os will see this as two seperate programs
+-a more intuitive version of doing this is using threads using pthread
+-to stop multiple threads using one variable and cause problems use mutex
+
+>>Memory access styles
+-uniform memory access:
+ #have every processor access memory if bus is empty and wait if other cpu is using it and every address is as quick to access as any other
+ #works for few processor cores but for >~64 you are more likely to wait than access
+-numa
+ #illustration in slides sys 7.12.18
+ #split memory into two connect half of the precessors to one half and connect the two halves of memory with dsm network
+ #makes it ahrder to program as you have to watch which memory you access with which processor
