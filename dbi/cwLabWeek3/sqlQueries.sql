@@ -1,0 +1,20 @@
+CREATE TABLE Actor(actID INT NOT NULL,
+	actName VARCHAR(255) NOT NULL,
+       	CONSTRAINT pk_act PRIMARY KEY (actID),
+	CONSTRAINT ck_act UNIQUE (actName));
+CREATE TABLE Movie(mvID INT NOT NULL,
+       	actID INT NOT NULL,
+       	title VARCHAR(255) NOT NULL,
+       	year INT NOT NULL,
+       	genre VARCHAR(255) NOT NULL,
+       	price INT NOT NULL,
+       	numOfScn INT NOT NULL,
+       	CONSTRAINT pk_mv PRIMARY KEY(mvID),
+       	CONSTRAINT fk_act_mv FOREIGN KEY(actID) REFERENCES Actor(actID) ON UPDATE CASCADE ON DELETE RESTRICT);
+CREATE TABLE Scene(scnID INT NOT NULL,
+        mvID INT NOT NULL,
+        loc VARCHAR(255) NOT NULL,
+        dur INT NOT NULL,
+        CONSTRAINT pk_scn PRIMARY KEY(scnID),
+        CONSTRAINT fk_scn_mv FOREIGN KEY(mvID) REFERENCES Movie(mvID) ON UPDATE CASCADE ON DELETE RESTRICT);
+

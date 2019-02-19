@@ -4,7 +4,6 @@
 -If the row of the table is: A=1 B=0 C=1 you convert it to A & ~B & C;do that for every row
 -Put all of the formulas created in the previous step and put them in an OR function
 -The produced formula is bound to be correct although it is not always the simplest one
-TODO look up a proof for Sum-of-products
 
 >>Boolean algebra:
 -Used to simplify created by sum-of-products and to analyze logical formulas
